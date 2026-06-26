@@ -204,6 +204,18 @@ function contactoEsValido(valorContacto) {
     return patronContacto.test(valorContacto);
 }
 
+// Creamos una función llamada "escaparHTML".
+// Esta función convierte caracteres especiales en entidades HTML para evitar que
+// contenido ingresado por el usuario se interprete como markup dentro del resumen.
+function escaparHTML(texto) {
+    return texto
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 // Creamos una función llamada "mostrarMensajeGeneral".
 // Esta función muestra un mensaje grande debajo del formulario.
 // Recibe el texto del mensaje y el tipo de mensaje: "error" o "exito".
@@ -430,11 +442,16 @@ formulario.addEventListener("submit", function (evento) {
 
     // Escribimos dentro del resumen una explicación con los datos principales de la inscripción.
     // Usamos template string con comillas invertidas para insertar variables dentro del texto con ${variable}.
+    const nombreSeguro = escaparHTML(valorNombre);
+    const correoSeguro = escaparHTML(valorCorreo);
+    const tallerSeguro = escaparHTML(valorTaller);
+    const contactoSeguro = escaparHTML(valorContacto);
+
     resumenTexto.innerHTML = `
-        <strong>${valorNombre}</strong>, de ${valorEdad} años, quedó inscrito(a) al taller
-        <strong>${valorTaller}</strong>. La confirmación se enviará al correo
-        <strong>${valorCorreo}</strong> y el contacto registrado es
-        <strong>${valorContacto}</strong>.
+        <strong>${nombreSeguro}</strong>, de ${valorEdad} años, quedó inscrito(a) al taller
+        <strong>${tallerSeguro}</strong>. La confirmación se enviará al correo
+        <strong>${correoSeguro}</strong> y el contacto registrado es
+        <strong>${contactoSeguro}</strong>.
     `;
 
     // Reiniciamos el formulario para limpiar los campos después de una inscripción correcta.
